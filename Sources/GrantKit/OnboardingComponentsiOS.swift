@@ -34,6 +34,7 @@ public struct StepScaffold<Hero: View, Controls: View>: View {
                 Text(title)
                     .font(.title2.bold())
                     .multilineTextAlignment(.center)
+                    .accessibilityAddTraits(.isHeader)
                 Text(subtitle)
                     .font(.callout)
                     .foregroundStyle(.secondary)
@@ -65,6 +66,7 @@ public struct HeroSymbol: View {
             .symbolRenderingMode(.hierarchical)
             .foregroundStyle(tint)
             .contentTransition(.symbolEffect(.replace))
+            .accessibilityHidden(true)
     }
 }
 
