@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags: ['**']
+
+permissions:
+  contents: read
+
+concurrency: release
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  admit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    permissions:
+      actions: read
+      contents: read
+    env:
+      VERSION: ${{ github.ref_name }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check that this is the newest annotated version on the default branch
+        run: |
+          [[ $VERSION =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || { echo "::error::$VERSION is not MAJOR.MINOR.PATCH."; exit 1; }
+          git fetch --force origin "refs/heads/$DEFAULT_BRANCH:refs/remotes/origin/$DEFAULT_BRANCH"
+          git merge-base --is-ancestor "$GITHUB_SHA" "origin/$DEFAULT_BRANCH" || { echo "::error::$VERSION is not on $DEFAULT_BRANCH."; exit 1; }
+          [[ $(git cat-file -t "refs/tags/$VERSION") == tag ]] || { echo "::error::Release tags must be annotated."; exit 1; }
+          newest=$(git tag --list | grep -E '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' | sort -V | tail -1)
+          [[ $newest == "$VERSION" ]] || { echo "::error::$newest is newer than $VERSION."; exit 1; }
+
+      - name: Wait for CI to pass on this commit
+        timeout-minutes: 35
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          started=$SECONDS
+          while :; do
+            state=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --branch "$DEFAULT_BRANCH" --commit "$GITHUB_SHA" --json status,conclusion,event \
+              --jq '[.[] | select(.event == "push" or .event == "workflow_dispatch")] | if any(.[]; .conclusion == "success") then "passed" elif any(.[]; .status != "completed") then "running" elif length > 0 then "failed" else "missing" end') \
+              || state=unknown
+            case $state in
+              passed) exit 0 ;;
+              failed) echo "::error::CI failed on $GITHUB_SHA."; exit 1 ;;
+              missing) (( SECONDS - started < 120 )) || { echo "::error::No CI run exists for $GITHUB_SHA; run CI on $DEFAULT_BRANCH at this commit before tagging."; exit 1; } ;;
+            esac
+            sleep 10
+          done
+
+  github-release:
+    needs: admit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      VERSION: ${{ github.ref_name }}
+    steps:
+      - name: Publish the tag message as the release notes
+        run: |
+          newest=$(gh api --paginate "repos/$GH_REPO/tags?per_page=100" --jq '.[].name' | grep -E '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' | sort -V | tail -1)
+          latest=false
+          if [[ $newest == "$VERSION" ]]; then latest=true; fi
+          tag=$(gh api "repos/$GH_REPO/git/ref/tags/$VERSION" --jq .object.sha)
+          gh api "repos/$GH_REPO/git/tags/$tag" --jq .message > "$RUNNER_TEMP/notes.md"
+          [[ -s $RUNNER_TEMP/notes.md ]] || { echo "::error::The $VERSION tag has no message to publish."; exit 1; }
+          gh release create "$VERSION" --verify-tag --title "$VERSION" --notes-file "$RUNNER_TEMP/notes.md" --latest="$latest"
