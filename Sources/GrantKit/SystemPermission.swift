@@ -16,12 +16,12 @@ public enum SystemPermission: String, CaseIterable, Identifiable, Sendable {
     public var id: String { rawValue }
 
     /// The name macOS uses for this permission in System Settings.
-    public var title: String {
+    public var title: LocalizedStringResource {
         switch self {
-        case .microphone: "Microphone"
-        case .accessibility: "Accessibility"
-        case .inputMonitoring: "Input Monitoring"
-        case .screenRecording: "Screen Recording"
+        case .microphone: LocalizedStringResource("Microphone", bundle: #bundle, comment: "The Microphone permission as Settings names it.")
+        case .accessibility: LocalizedStringResource("Accessibility", bundle: #bundle, comment: "The Accessibility pane in System Settings > Privacy & Security.")
+        case .inputMonitoring: LocalizedStringResource("Input Monitoring", bundle: #bundle, comment: "The Input Monitoring pane in System Settings > Privacy & Security.")
+        case .screenRecording: LocalizedStringResource("Screen Recording", bundle: #bundle, comment: "The Screen Recording pane in System Settings > Privacy & Security.")
         }
     }
 

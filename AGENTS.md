@@ -16,6 +16,10 @@ of every committed file and message.
 - `PermissionPane` describes a destination, not authorization for another app.
   `guide(to:app:timeout:check:)` requires a check executed by the real owner.
 - iOS onboarding views stay theme-neutral; the host owns sequencing and style.
+- User-facing text lives in `Sources/GrantKit/Localizable.xcstrings` (English
+  source, Swedish) and resolves with `bundle: #bundle`. Public titles are
+  `LocalizedStringResource`, so host literals resolve in the host's catalog;
+  a new string needs every catalog language.
 - No microphone capture, networking, analytics or persistent permission store
   belongs in this package. The host declares usage descriptions and entitlements.
 - `Demo/` is macOS-only; `Tests/` uses synthetic identities and no permission

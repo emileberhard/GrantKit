@@ -38,7 +38,7 @@ struct GuidancePanelView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("Drag \(app.displayName) into the list, then turn it on to allow \(permission.title).")
+                Text("Drag \(app.displayName) into the list, then turn it on to allow \(String(localized: permission.title)).", bundle: #bundle, comment: "Floating panel beside System Settings. The first variable is the app's name, the second the System Settings pane, such as Accessibility.")
                     .font(.system(size: 13, weight: .medium))
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 8)
@@ -48,7 +48,7 @@ struct GuidancePanelView: View {
                         .foregroundStyle(.secondary)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Close")
+                .accessibilityLabel(Text("Close", bundle: #bundle, comment: "Closes the floating permission guidance panel."))
             }
             HStack(spacing: 12) {
                 if state.arrowDirection == .left {

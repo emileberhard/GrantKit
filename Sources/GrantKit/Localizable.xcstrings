@@ -1,0 +1,160 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ needs microphone access to continue." : {
+      "comment" : "Explanation on the microphone permission step. The variable is the app's name.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ behöver åtkomst till mikrofonen för att fortsätta."
+          }
+        }
+      }
+    },
+    "Accessibility" : {
+      "comment" : "The Accessibility pane in System Settings > Privacy & Security.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hjälpmedel"
+          }
+        }
+      }
+    },
+    "Allow Microphone" : {
+      "comment" : "Button that shows the system microphone prompt.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tillåt mikrofonen"
+          }
+        }
+      }
+    },
+    "Allow Microphone Access" : {
+      "comment" : "Title of the microphone permission step.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ge åtkomst till mikrofonen"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "comment" : "Closes the floating permission guidance panel.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stäng"
+          }
+        }
+      }
+    },
+    "Drag %@ into the list, then turn it on to allow %@." : {
+      "comment" : "Floating panel beside System Settings. The first variable is the app's name, the second the System Settings pane, such as Accessibility.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dra %1$@ till listan och slå sedan på den under %2$@."
+          }
+        }
+      }
+    },
+    "Full Disk Access" : {
+      "comment" : "The Full Disk Access pane in System Settings > Privacy & Security.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full skivåtkomst"
+          }
+        }
+      }
+    },
+    "Granted" : {
+      "comment" : "Shown on a permission step once the permission is allowed.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tillåten"
+          }
+        }
+      }
+    },
+    "Input Monitoring" : {
+      "comment" : "The Input Monitoring pane in System Settings > Privacy & Security.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inmatningsövervakning"
+          }
+        }
+      }
+    },
+    "Microphone" : {
+      "comment" : "The Microphone permission as Settings names it.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon"
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "comment" : "Opens the app's page in iOS Settings after the permission was denied.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öppna Inställningar"
+          }
+        }
+      }
+    },
+    "Screen Recording" : {
+      "comment" : "The Screen Recording pane in System Settings > Privacy & Security.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skärminspelning"
+          }
+        }
+      }
+    },
+    "This app" : {
+      "comment" : "Stands in for the app's name when its bundle has none.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den här appen"
+          }
+        }
+      }
+    },
+    "Turn on %@ — iOS restarts %@, and setup continues where you left off." : {
+      "comment" : "Below Open Settings. The first variable is the Settings switch, such as Microphone; the second is the app's name.",
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slå på %1$@ – iOS startar om %2$@ och konfigureringen fortsätter där du slutade."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

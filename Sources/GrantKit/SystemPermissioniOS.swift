@@ -10,9 +10,9 @@ public enum SystemPermission: String, CaseIterable, Identifiable, Sendable {
     public var id: String { rawValue }
 
     /// The name iOS uses for this permission in Settings.
-    public var title: String {
+    public var title: LocalizedStringResource {
         switch self {
-        case .microphone: "Microphone"
+        case .microphone: LocalizedStringResource("Microphone", bundle: #bundle, comment: "The Microphone permission as Settings names it.")
         }
     }
 

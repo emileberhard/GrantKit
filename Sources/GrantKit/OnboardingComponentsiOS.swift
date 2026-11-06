@@ -6,14 +6,14 @@ import SwiftUI
 /// card. Public so a host app's own onboarding steps share the exact layout
 /// GrantKit's ``PermissionStep`` uses.
 public struct StepScaffold<Hero: View, Controls: View>: View {
-    private let title: String
-    private let subtitle: String
+    private let title: LocalizedStringResource
+    private let subtitle: LocalizedStringResource
     private let hero: Hero
     private let controls: Controls
 
     public init(
-        title: String,
-        subtitle: String,
+        title: LocalizedStringResource,
+        subtitle: LocalizedStringResource,
         @ViewBuilder hero: () -> Hero,
         @ViewBuilder controls: () -> Controls
     ) {

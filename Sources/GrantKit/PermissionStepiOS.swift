@@ -12,8 +12,8 @@ import SwiftUI
 @MainActor
 public struct PermissionStep: View {
     private let permission: SystemPermission
-    private let title: String
-    private let subtitle: String
+    private let title: LocalizedStringResource
+    private let subtitle: LocalizedStringResource
     private let symbol: String
     private let controlSpacing: CGFloat
     private let primaryActionVerticalPadding: CGFloat
@@ -25,16 +25,16 @@ public struct PermissionStep: View {
 
     public init(
         _ permission: SystemPermission,
-        title: String? = nil,
-        subtitle: String? = nil,
+        title: LocalizedStringResource? = nil,
+        subtitle: LocalizedStringResource? = nil,
         symbol: String? = nil,
         controlSpacing: CGFloat = 14,
         primaryActionVerticalPadding: CGFloat = 0,
         onContinue: @escaping () -> Void
     ) {
         self.permission = permission
-        self.title = title ?? "Allow \(permission.title) Access"
-        self.subtitle = subtitle ?? "\(Self.appName) needs \(permission.title.lowercased()) access to continue."
+        self.title = title ?? Self.defaultTitle(for: permission)
+        self.subtitle = subtitle ?? Self.defaultSubtitle(for: permission)
         self.symbol = symbol ?? Self.defaultSymbol(for: permission)
         self.controlSpacing = controlSpacing
         self.primaryActionVerticalPadding = primaryActionVerticalPadding
@@ -52,22 +52,30 @@ public struct PermissionStep: View {
             VStack(spacing: controlSpacing) {
                 switch status {
                 case .granted:
-                    Label("Granted", systemImage: "checkmark")
+                    Label {
+                        Text("Granted", bundle: #bundle, comment: "Shown on a permission step once the permission is allowed.")
+                    } icon: {
+                        Image(systemName: "checkmark")
+                    }
                         .font(.body.weight(.semibold))
                         .foregroundStyle(.green)
                 case .notDetermined:
-                    Button("Allow \(permission.title)") {
+                    Button {
                         request()
+                    } label: {
+                        Text(Self.allowAction(for: permission))
                     }
                     .padding(.vertical, primaryActionVerticalPadding)
                     .disabled(isRequesting)
                 case .denied:
-                    Button("Open Settings") {
+                    Button {
                         request()
+                    } label: {
+                        Text("Open Settings", bundle: #bundle, comment: "Opens the app's page in iOS Settings after the permission was denied.")
                     }
                     .padding(.vertical, primaryActionVerticalPadding)
 
-                    Text("Turn on \(permission.title) — iOS restarts \(Self.appName), and setup continues where you left off.")
+                    Text("Turn on \(String(localized: permission.title)) — iOS restarts \(Self.appName), and setup continues where you left off.", bundle: #bundle, comment: "Below Open Settings. The first variable is the Settings switch, such as Microphone; the second is the app's name.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -111,6 +119,24 @@ public struct PermissionStep: View {
         }
     }
 
+    private static func defaultTitle(for permission: SystemPermission) -> LocalizedStringResource {
+        switch permission {
+        case .microphone: LocalizedStringResource("Allow Microphone Access", bundle: #bundle, comment: "Title of the microphone permission step.")
+        }
+    }
+
+    private static func defaultSubtitle(for permission: SystemPermission) -> LocalizedStringResource {
+        switch permission {
+        case .microphone: LocalizedStringResource("\(appName) needs microphone access to continue.", bundle: #bundle, comment: "Explanation on the microphone permission step. The variable is the app's name.")
+        }
+    }
+
+    private static func allowAction(for permission: SystemPermission) -> LocalizedStringResource {
+        switch permission {
+        case .microphone: LocalizedStringResource("Allow Microphone", bundle: #bundle, comment: "Button that shows the system microphone prompt.")
+        }
+    }
+
     private static func defaultSymbol(for permission: SystemPermission) -> String {
         switch permission {
         case .microphone: "mic.fill"
@@ -121,7 +147,7 @@ public struct PermissionStep: View {
         let info = Bundle.main
         return (info.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String)
             ?? (info.object(forInfoDictionaryKey: "CFBundleName") as? String)
-            ?? "This app"
+            ?? String(localized: "This app", bundle: #bundle, comment: "Stands in for the app's name when its bundle has none.")
     }
 }
 #endif

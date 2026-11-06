@@ -18,6 +18,14 @@ import Testing
         #expect(SystemPermission.screenRecording.paneAnchor == "Privacy_ScreenCapture")
     }
 
+    @Test func titlesResolveFromThePackageCatalog() {
+        var title = SystemPermission.inputMonitoring.title
+        title.locale = Locale(identifier: "sv")
+        #expect(String(localized: title) == "Inmatningsövervakning")
+        title.locale = Locale(identifier: "en")
+        #expect(String(localized: title) == "Input Monitoring")
+    }
+
     @Test func tccServiceNamesMatchTccutil() {
         #expect(SystemPermission.microphone.tccServiceName == "Microphone")
         #expect(SystemPermission.accessibility.tccServiceName == "Accessibility")
